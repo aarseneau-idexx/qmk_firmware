@@ -1,0 +1,5 @@
+mass_compile.keymap=default 
+multibuild.keymap=default 
+user.keyboard=keychron/q6/ansi 
+user.keymap=keychron 
+user.qmk_home=/home/aarseneau/git/qmk_firmware

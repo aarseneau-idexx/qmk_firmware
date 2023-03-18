@@ -1,0 +1,66 @@
+{
+    "manufacturer": "blitz",
+    "keyboard_name": "blitzpad",
+    "maintainer": "aarseneau",
+    "processor": "RP2040",
+    "bootloader": "rp2040",
+    "board": "GENERIC_RP_RP2040",
+    "usb": {
+        "device_version": "1.0.0",
+        "pid": "0x5604",
+        "vid": "0x6F75"
+    },
+    "diode_direction": "ROW2COL",
+    "features": {
+        "audio": false,
+        "backlight": false,
+        "bootmagic": true,
+        "command": false,
+        "console": false,
+        "encoder": true,
+        "extrakey": true,
+        "mousekey": true,
+        "nkro": true,
+        "rgb_matrix": false,
+        "rgblight": false
+    },
+    "matrix_pins": {
+        "cols": ["GP0", "GP1", "GP2", "GP3", "GP8"],
+        "rows": ["GP4", "GP5", "GP6", "GP7"]
+    },
+    "encoder": {
+        "enabled": true,
+        "rotary": [
+            {
+                "pin_a": "GP18",
+                "pin_b": "GP17"
+            }
+        ]
+    },
+    "layouts": {
+        "LAYOUT_20_ansi": {
+            "layout": [
+                { "label": "1",     "matrix": [0, 0], "w": 1, "x": 0, "y": 0 },
+                { "label": "2",     "matrix": [0, 1], "w": 1, "x": 1, "y": 0 },
+                { "label": "3",     "matrix": [0, 2], "w": 1, "x": 2, "y": 0 },
+                { "label": "4",     "matrix": [0, 3], "w": 1, "x": 3, "y": 0 },
+                { "label": "5",     "matrix": [0, 4], "w": 1, "x": 4, "y": 0 },
+                { "label": "6",     "matrix": [1, 0], "w": 1, "x": 0, "y": 1 },
+                { "label": "7",     "matrix": [1, 1], "w": 1, "x": 1, "y": 1 },
+                { "label": "8",     "matrix": [1, 2], "w": 1, "x": 2, "y": 1 },
+                { "label": "9",     "matrix": [1, 3], "w": 1, "x": 3, "y": 1 },
+                { "label": "0",     "matrix": [1, 4], "w": 1, "x": 4, "y": 1 },
+                { "label": "A",     "matrix": [2, 0], "w": 1, "x": 0, "y": 2 },
+                { "label": "B",     "matrix": [2, 1], "w": 1, "x": 1, "y": 2 },
+                { "label": "C",     "matrix": [2, 2], "w": 1, "x": 2, "y": 2 },
+                { "label": "D",     "matrix": [2, 3], "w": 1, "x": 3, "y": 2 },
+                { "label": "E",     "matrix": [2, 4], "w": 1, "x": 4, "y": 2 },
+                { "label": "F",     "matrix": [3, 0], "w": 1, "x": 0, "y": 3 },
+                { "label": "G",     "matrix": [3, 1], "w": 1, "x": 1, "y": 3 },
+                { "label": "H",     "matrix": [3, 2], "w": 1, "x": 2, "y": 3 },
+                { "label": "I",     "matrix": [3, 3], "w": 1, "x": 3, "y": 3 },
+                { "label": "J",     "matrix": [3, 4], "w": 1, "x": 4, "y": 3 }
+            ]
+        }
+    }
+}
