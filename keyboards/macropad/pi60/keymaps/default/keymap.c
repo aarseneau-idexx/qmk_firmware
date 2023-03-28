@@ -17,42 +17,26 @@
 #include QMK_KEYBOARD_H
 #include "ocean_dream.h"
 
+enum custom_keycodes {
+  CTRL_U_K = SAFE_RANGE,
+  ALT_F5,
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [0] = LAYOUT_20_ansi(
-        QK_BOOT,       KC_MPRV,    KC_MPLY,    KC_MNXT,    KC_MUTE,
-        KC_6,        KC_7,       KC_8,       KC_9,       KC_A,
-        KC_B,        KC_C,       KC_F10,     KC_F11,     LSFT(KC_F11),
-        KC_G,        KC_H,       KC_I,       KC_J,       KC_F5
-    ),
-
-    [0] = LAYOUT_20_ansi(
-        QK_BOOT,       KC_MPRV,    KC_MPLY,    KC_MNXT,    KC_MUTE,
-        KC_6,        KC_7,       KC_8,       KC_9,       KC_A,
-        KC_B,        KC_C,       KC_F10,     KC_F11,     LSFT(KC_F11),
-        KC_G,        KC_H,       KC_I,       KC_J,       KC_F5
-    ),
-
-    [0] = LAYOUT_20_ansi(
-        QK_BOOT,       KC_MPRV,    KC_MPLY,    KC_MNXT,    KC_MUTE,
-        KC_6,        KC_7,       KC_8,       KC_9,       KC_A,
-        KC_B,        KC_C,       KC_F10,     KC_F11,     LSFT(KC_F11),
-        KC_G,        KC_H,       KC_I,       KC_J,       KC_F5
-    ),
-
-    [0] = LAYOUT_20_ansi(
-        QK_BOOT,       KC_MPRV,    KC_MPLY,    KC_MNXT,    KC_MUTE,
-        KC_6,        KC_7,       KC_8,       KC_9,       KC_A,
-        KC_B,        KC_C,       KC_F10,     KC_F11,     LSFT(KC_F11),
-        KC_G,        KC_H,       KC_I,       KC_J,       KC_F5
-    ),
+        ALT_F5,         KC_MPRV,                KC_MPLY,            KC_MNXT,            KC_MUTE,
+        KC_F11,         LSFT(KC_F11),           KC_F10,             LSFT(KC_F9),        KC_F9,
+        KC_F12,         LSFT(KC_F12),           S(KC_ENT),          LCTL(KC_D),         KC_F5,
+        LCTL(KC_MINS),  LSFT(LCTL(KC_MINS)),    LCTL(LSFT(KC_B)),   LCTL(LSFT(KC_R)),   CTRL_U_K
+    )
 };
 
-#if defined(ENCODER_MAP_ENABLE)
+//#if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
     [0] =  { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), },
     };
-#endif
+//#endif
 
 #ifndef OCEAN_DREAM_ENABLE
 static void render_logo(void) {
@@ -108,6 +92,17 @@ bool oled_task_user(void) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case CTRL_U_K:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LCTL("u"));
+                SEND_STRING(SS_TAP(X_K));
+            }
+            break;
+        case ALT_F5:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LALT(SS_TAP(X_F5)));
+            }
+            break;
         default:
 #ifdef OCEAN_DREAM_ENABLE
             is_calm = (record->event.pressed) ? true : false;
