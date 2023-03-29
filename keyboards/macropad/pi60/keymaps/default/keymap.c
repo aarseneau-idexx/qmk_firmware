@@ -19,13 +19,13 @@
 
 enum custom_keycodes {
   CTRL_U_K = SAFE_RANGE,
-  ALT_F5,
+  CHAT_GPT,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [0] = LAYOUT_20_ansi(
-        ALT_F5,         KC_MPRV,                KC_MPLY,            KC_MNXT,            KC_MUTE,
+        CHAT_GPT,         KC_MPRV,                KC_MPLY,            KC_MNXT,            KC_MUTE,
         KC_F11,         LSFT(KC_F11),           KC_F10,             LSFT(KC_F9),        KC_F9,
         KC_F12,         LSFT(KC_F12),           S(KC_ENT),          LCTL(KC_D),         KC_F5,
         LCTL(KC_MINS),  LSFT(LCTL(KC_MINS)),    LCTL(LSFT(KC_B)),   LCTL(LSFT(KC_R)),   CTRL_U_K
@@ -98,9 +98,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING(SS_TAP(X_K));
             }
             break;
-        case ALT_F5:
+        case CHAT_GPT:
             if (record->event.pressed) {
-                SEND_STRING(SS_LALT(SS_TAP(X_F5)));
+                SEND_STRING(SS_LWIN("r"));
+                SEND_STRING(SS_DELAY(10)"https://chat.openai.com/chat?model=gpt-4");
+                SEND_STRING(SS_TAP(X_ENTER));
             }
             break;
         default:
