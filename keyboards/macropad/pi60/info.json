@@ -21,19 +21,44 @@
         "extrakey": true,
         "mousekey": true,
         "nkro": true,
-        "rgb_matrix": false,
+        "rgb_matrix": true,
         "rgblight": false
     },
     "matrix_pins": {
-        "cols": ["GP0", "GP1", "GP2", "GP3", "GP8"],
-        "rows": ["GP4", "GP5", "GP6", "GP7"]
+        "cols": ["GP1", "GP2", "GP3", "GP4", "GP5"],
+        "rows": ["GP6", "GP7", "GP8", "GP9"]
+    },
+    "rgb_matrix": {
+        "driver": "WS2812",
+        "layout": [
+            { "flags": 2, "x": 20, "y": 50 },
+            { "flags": 2, "x": 24, "y": 50 },
+            { "flags": 2, "x": 26, "y": 50 },
+            { "flags": 2, "x": 28, "y": 50 },
+            { "flags": 2, "x": 30, "y": 50 },
+            { "flags": 2, "x": 20, "y": 40 },
+            { "flags": 2, "x": 24, "y": 40 },
+            { "flags": 2, "x": 26, "y": 40 },
+            { "flags": 2, "x": 28, "y": 40 },
+            { "flags": 2, "x": 30, "y": 40 },
+            { "flags": 2, "x": 20, "y": 30 },
+            { "flags": 2, "x": 24, "y": 30 },
+            { "flags": 2, "x": 26, "y": 30 },
+            { "flags": 2, "x": 28, "y": 30 },
+            { "flags": 2, "x": 30, "y": 30 },
+            { "flags": 2, "x": 20, "y": 20 },
+            { "flags": 2, "x": 24, "y": 20 },
+            { "flags": 2, "x": 26, "y": 20 },
+            { "flags": 2, "x": 28, "y": 20 },
+            { "flags": 2, "x": 30, "y": 20 }
+        ]
     },
     "encoder": {
         "enabled": true,
         "rotary": [
             {
-                "pin_a": "GP18",
-                "pin_b": "GP17"
+                "pin_a": "GP10",
+                "pin_b": "GP11"
             }
         ]
     },

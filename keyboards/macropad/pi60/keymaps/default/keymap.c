@@ -15,7 +15,8 @@
  */
 
 #include QMK_KEYBOARD_H
-#include "ocean_dream.h"
+#include <quantum/deferred_exec.h>
+#include <stdint.h>
 
 enum custom_keycodes {
   CTRL_U_K = SAFE_RANGE,
@@ -32,13 +33,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
-//#if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
     [0] =  { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), },
     };
-//#endif
 
-#ifndef OCEAN_DREAM_ENABLE
 static void render_logo(void) {
     static const char PROGMEM qmk_logo[] = {
     // 'blitzpad', 128x32px
@@ -78,19 +76,33 @@ static void render_logo(void) {
 
     oled_write_raw_P(qmk_logo, sizeof(qmk_logo));
 }
-#endif
 
 bool oled_task_user(void) {
-#ifdef OCEAN_DREAM_ENABLE
-        render_stars();
-#else
-        render_logo();
-        oled_scroll_left();
-#endif
+    render_logo();
+    oled_scroll_left();
     return false;
 }
 
+// Turns off the LED matrix when called.
+deferred_token led_disable_token = INVALID_DEFERRED_TOKEN;
+uint32_t led_matrix_disable(uint32_t trigger_time, void *cb_arg) {
+    // disable led matrix
+    rgb_matrix_disable_noeeprom();
+    return 0;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // schedule led_matrix_disable to run in 20 minutes using defer_exec
+    if (record->event.pressed) {
+        bool needs_scheduling = true;
+        rgb_matrix_enable_noeeprom();
+        if (led_disable_token != INVALID_DEFERRED_TOKEN) {
+            needs_scheduling = !extend_deferred_exec(led_disable_token, 20 * 60 * 1000);
+        }
+
+        if (needs_scheduling)
+            led_disable_token = defer_exec(20 * 60 * 1000, led_matrix_disable, NULL);
+    }
     switch (keycode) {
         case CTRL_U_K:
             if (record->event.pressed) {
@@ -101,14 +113,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case CHAT_GPT:
             if (record->event.pressed) {
                 SEND_STRING(SS_LWIN("r"));
-                SEND_STRING(SS_DELAY(10)"https://chat.openai.com/chat?model=gpt-4");
-                SEND_STRING(SS_TAP(X_ENTER));
+                SEND_STRING(SS_DELAY(250)"https://chat.openai.com/chat?model=gpt-4");
+                SEND_STRING(SS_DELAY(50)SS_TAP(X_ENTER));
             }
             break;
         default:
-#ifdef OCEAN_DREAM_ENABLE
-            is_calm = (record->event.pressed) ? true : false;
-#endif
             break;
     }
     return true;
@@ -117,4 +126,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 void keyboard_post_init_user(void) {
     setPinOutput(GP25);
     writePinHigh(GP25);
+
+    rgb_matrix_enable();
+    rgb_matrix_sethsv_noeeprom(140, 255, 100);
+    led_disable_token = defer_exec(20 * 60 * 1000, led_matrix_disable, NULL);
 }
