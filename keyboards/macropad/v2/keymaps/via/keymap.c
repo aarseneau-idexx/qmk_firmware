@@ -73,21 +73,82 @@ static void render_logo(void) {
     oled_write_raw_P(qmk_logo, sizeof(qmk_logo));
 }
 
+static char * pDisplayText = NULL;
+static volatile bool bDisplayChanged = false;
+
+void display_text(char * pText) {
+    bDisplayChanged = true;
+
+    if (pDisplayText == NULL && pText == NULL)
+        bDisplayChanged = false;
+
+    pDisplayText = pText;
+}
+
+uint32_t display_logo(uint32_t trigger_time, void* args) {
+    display_text(NULL);
+    return 0;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    static deferred_token logoDelay = INVALID_DEFERRED_TOKEN;
+    static char PROGMEM * text[4][5] = {
+        { PSTR("ChatGPT"),       PSTR("Previous"),       PSTR("Play/Pause"),     PSTR("Next"),           PSTR("Mute") },
+        { PSTR("Step In"),       PSTR("Step Out"),       PSTR("Step Over"),      PSTR("Shift+F9"),       PSTR("F9") },
+        { PSTR("Definition"),    PSTR("Declaration"),    PSTR("Shift+Enter"),    PSTR("Ctrl+D"),         PSTR("Run") },
+        { PSTR("Ctrl+-"),        PSTR("Shift+Ctrl+-"),   PSTR("Shift+Ctrl+B"),   PSTR("Shift+Ctrl+R"),   PSTR("Ctrl+U, K") },
+    };
+
+    // Display the text for the standard keys.
+    if (record->event.key.row < 4 && record->event.key.col < 5) {
+        display_text(text[record->event.key.row][record->event.key.col]);
+    }
+
     // Encoder keys won't trigger a refresh of the RGB Matrix, so we do it here
     // to ensure the suspend timer is reset if they are pressed.
-    if (keycode == KC_VOLD || keycode == KC_VOLU) {
+    switch (keycode) {
+    case KC_VOLU:
+        display_text(PSTR("Volume Up"));
         process_rgb_matrix(0,4,true);
-    }
+        break;
+    case KC_VOLD:
+        display_text(PSTR("Volume Down"));
+        process_rgb_matrix(0,4,true);
+        break;
+    default:
+        break;
+    };
+
+    if (logoDelay != INVALID_DEFERRED_TOKEN)
+        cancel_deferred_exec(logoDelay);
+
+    logoDelay = defer_exec(5000, display_logo, NULL);
 
     return true;
 }
 
+#ifdef OLED_ENABLE
 bool oled_task_user(void) {
-    render_logo();
-    oled_scroll_left();
+    if (bDisplayChanged) {
+        bDisplayChanged = false;
+        oled_scroll_off();
+        oled_clear();
+        return false;
+    }
+
+    if (pDisplayText == NULL) {
+        render_logo();
+        oled_scroll_left();
+        return false;
+    }
+
+    // Host Keyboard LED Status
+    oled_write_P(PSTR("\n"), false);
+    oled_write_P(pDisplayText, false);
+
     return false;
 }
+#endif
 
 void keyboard_post_init_user(void) {
     setPinOutput(GP25);
