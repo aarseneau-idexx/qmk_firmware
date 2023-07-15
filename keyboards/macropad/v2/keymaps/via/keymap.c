@@ -73,6 +73,16 @@ static void render_logo(void) {
     oled_write_raw_P(qmk_logo, sizeof(qmk_logo));
 }
 
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // Encoder keys won't trigger a refresh of the RGB Matrix, so we do it here
+    // to ensure the suspend timer is reset if they are pressed.
+    if (keycode == KC_VOLD || keycode == KC_VOLU) {
+        process_rgb_matrix(0,4,true);
+    }
+
+    return true;
+}
+
 bool oled_task_user(void) {
     render_logo();
     oled_scroll_left();

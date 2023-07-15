@@ -31,5 +31,6 @@
     },
     "clangd.arguments": [
         "--header-insertion=never"
-    ]
+    ],
+    "cmake.configureOnOpen": false
 }
